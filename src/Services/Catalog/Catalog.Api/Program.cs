@@ -1,3 +1,5 @@
+using Weasel.Core;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCarter();
