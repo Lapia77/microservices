@@ -7,6 +7,17 @@ public record UpdateProductCommand (Guid Id, string Name,
                                    decimal Price): ICommand<UpdateProductResult>;
 
 public record UpdateProductResult(bool IsSucces);
+
+public class UpdateProductCommandValidator: AbstractValidator<UpdateProductCommand>
+{
+    public UpdateProductCommandValidator()
+    {
+        RuleFor(x=>x.Id).NotEmpty().WithMessage("Id is required");
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required");
+        RuleFor(x => x.Categories).NotEmpty().WithMessage("Category is required");
+        RuleFor(x => x.Price).GreaterThan(0).WithMessage("Price must be greater than 0");
+    }
+}
 internal class UpdateProductCommandHandler(IDocumentSession session, ILogger<UpdateProductCommandHandler> logger) :
     ICommandHandler<UpdateProductCommand, UpdateProductResult>
 {
@@ -17,7 +28,7 @@ internal class UpdateProductCommandHandler(IDocumentSession session, ILogger<Upd
         var productExist = await session.LoadAsync<Product>(command.Id, cancellationToken);
 
         if (productExist is null) { 
-            throw new ProductNotFoundException();
+            throw new ProductNotFoundException(command.Id);
         }
 
         productExist.Name = command.Name;

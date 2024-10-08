@@ -11,7 +11,7 @@ public record UpdateProductRequest(Guid Id, string Name,
                                    decimal Price) ;
 
 public record UpdateProductResponse(bool IsSucces);
-public class UpdateProductCommandEndPoint : ICarterModule
+public class UpdateProductEndPoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
